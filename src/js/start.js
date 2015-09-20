@@ -26,6 +26,9 @@ define(['jquery',
 
     METHODOLOGY.prototype.init = function(config) {
 
+        /* Variables. */
+         var source, template, dynamic_data, html;
+
         /* Extend default configuration. */
         this.CONFIG = $.extend(true, {}, this.CONFIG, config);
 
@@ -35,11 +38,14 @@ define(['jquery',
         /* Store FAOSTAT language. */
         this.CONFIG.lang_faostat = FAOSTATCommons.iso2faostat(this.CONFIG.lang);
 
-        /* Initiate the WDS client. */
-        this.CONFIG.w = new WDSClient({
-            datasource: this.CONFIG.datasource,
-            serviceUrl: this.CONFIG.url_wds_crud
-        });
+        /* Load main structure. */
+        source = $(templates).filter('#faostat_ui_standards_methodology_structure').html();
+        template = Handlebars.compile(source);
+        dynamic_data = {
+
+        };
+        html = template(dynamic_data);
+        $('#' + this.CONFIG.placeholder_id).html(html);
 
     };
 
