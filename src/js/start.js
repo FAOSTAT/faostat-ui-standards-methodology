@@ -19,6 +19,7 @@ define(['jquery',
 
             w: null,
             lang: 'E',
+            methodology_id: undefined,
             prefix: 'faostat_ui_standards_methodology_',
             methodologies_tree_id: 'methodologies_tree',
             placeholder_id: 'faostat_ui_standards_methodology',
@@ -90,13 +91,6 @@ define(['jquery',
                 });
             }
 
-            /* Add domain node. */
-            //payload.push({
-            //    id: json.data[i].DomainCode,
-            //    text: json.data[i].DomainNameE,
-            //    parent: json.data[i].code
-            //});
-
         }
 
         /* Init JSTree. */
@@ -120,47 +114,30 @@ define(['jquery',
         });
 
         /* Implement node selection. */
-        //that.tree.on('activate_node.jstree', function (e, data) {
-        //
-        //    /* Fetch node. */
-        //    var node = $('#' + data.node.id);
-        //
-        //    /* Generic click listener, or specific listeners for groups and domains. */
-        //    if (that.CONFIG.callback.onClick) {
-        //        if (data.node.parent === '#') {
-        //            data.node.parent === '#' && that.tree.jstree().is_open() ? that.tree.jstree().close_node(node) : that.tree.jstree().open_node(node);
-        //        }
-        //        if (that.CONFIG.callback.onClick) {
-        //            that.CONFIG.callback.onClick({id: data.node.id});
-        //        }
-        //    } else {
-        //        if (data.node.parent === '#') {
-        //            data.node.parent === '#' && that.tree.jstree().is_open() ? that.tree.jstree().close_node(node) : that.tree.jstree().open_node(node);
-        //            if (that.CONFIG.callback.onGroupClick) {
-        //                that.CONFIG.callback.onGroupClick({id: data.node.id});
-        //            }
-        //        } else {
-        //            if (that.CONFIG.callback.onDomainClick) {
-        //                that.CONFIG.callback.onDomainClick({id: data.node.id});
-        //            }
-        //        }
-        //    }
-        //
-        //});
+        that.tree.on('activate_node.jstree', function (e, data) {
+            that.show_methodology(data.node.id);
+        });
 
         /* Show required domain. */
-        //this.tree.on('ready.jstree', function () {
-        //
-        //    /* set and select default code. */
-        //    that.selectDefaultCode();
-        //
-        //    /* Invoke onTreeRendered function. */
-        //    if (that.CONFIG.callback.onTreeRendered) {
-        //        that.CONFIG.callback.onTreeRendered(that.CONFIG.default_code);
-        //    }
-        //
-        //});
+        this.tree.on('ready.jstree', function () {
 
+            if (that.CONFIG.methodology_id !== undefined) {
+                $('#' + that.CONFIG.methodologies_tree_id).jstree().select_node(that.CONFIG.methodology_id);
+                that.show_methodology(that.CONFIG.methodology_id);
+            }
+
+        });
+
+    };
+
+    METHODOLOGY.prototype.show_methodology = function (methodology_id) {
+
+        /* Invoke API. */
+        this.CONFIG.api.methodology({
+            id: methodology_id
+        }).then(function (json) {
+            console.debug(json);
+        });
     };
 
     METHODOLOGY.prototype.destroy = function () {
