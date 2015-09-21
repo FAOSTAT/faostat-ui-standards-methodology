@@ -1,6 +1,9 @@
-define(function() {
+/*global define*/
+define(function () {
 
-    var config = {
+    'use strict';
+
+    return {
         paths: {
             FAOSTAT_UI_STANDARDS_METHODOLOGY: 'start',
             faostat_ui_standards_methodology: '../../'
@@ -11,7 +14,5 @@ define(function() {
             }
         }
     };
-
-    return config;
 
 });

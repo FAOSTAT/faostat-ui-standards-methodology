@@ -5,10 +5,11 @@ define(['jquery',
         'i18n!faostat_ui_standards_methodology/nls/translate',
         'faostat_commons',
         'faostatapiclient',
+        'q',
         'jstree',
         'bootstrap',
         'sweetAlert',
-        'amplify'], function ($, Handlebars, templates, translate, FAOSTATCommons, FAOSTATAPIClient) {
+        'amplify'], function ($, Handlebars, templates, translate, FAOSTATCommons, FAOSTATAPIClient, Q) {
 
     'use strict';
 
@@ -49,7 +50,7 @@ define(['jquery',
     METHODOLOGY.prototype.render = function () {
 
         /* Variables. */
-        var source, template, dynamic_data, html;
+        var source, template, dynamic_data, html, that = this;
 
         /* Load main structure. */
         source = $(templates).filter('#faostat_ui_standards_methodology_structure').html();
@@ -59,9 +60,8 @@ define(['jquery',
         $('#' + this.CONFIG.placeholder_id).html(html);
 
         /* Fetch FAOSTAT methodologies. */
-        this.CONFIG.api.methodologies({
-            success: this.process_api_response,
-            context: this
+        this.CONFIG.api.methodologies({}).then(function (json) {
+            that.process_api_response(json);
         });
 
     };
